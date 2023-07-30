@@ -67,15 +67,19 @@ def main(args=None):
     else:
         raise ValueError('Unsupported model depth, must be one of 18, 34, 50, 101, 152')
     
-
+    use_gpu = torch.cuda.is_available()
+    
     if parser.continue_from_path is not None:
-        retinanet.load_state_dict(torch.load(parser.continue_from_path))
+        if use_gpu:
+            retinanet.load_state_dict(torch.load(parser.continue_from_path))
+        else:
+            retinanet.load_state_dict(torch.load(parser.continue_from_path, map_location=torch.device('cpu')))
 
-    use_gpu = True
+    
 
-    if use_gpu:
-        if torch.cuda.is_available():
-            retinanet = retinanet.cuda()
+    
+    if torch.cuda.is_available():
+        retinanet = retinanet.cuda()
 
     if torch.cuda.is_available():
         retinanet = torch.nn.DataParallel(retinanet).cuda()
