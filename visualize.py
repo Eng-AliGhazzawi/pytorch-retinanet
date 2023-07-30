@@ -52,10 +52,13 @@ def main(args=None):
     elif parser.depth == 152:
         retinanet = model.resnet152(num_classes=10)
 
-    retinanet.load_state_dict(torch.load(parser.model))
 
-    use_gpu = True
+    use_gpu = torch.cuda.is_available()
 
+    if use_gpu:
+            retinanet.load_state_dict(torch.load(parser.model))
+    else:
+            retinanet.load_state_dict(torch.load(parser.model, map_location=torch.device('cpu')))
     if use_gpu:
         if torch.cuda.is_available():
             retinanet = retinanet.cuda()
