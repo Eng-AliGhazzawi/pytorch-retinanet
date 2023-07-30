@@ -86,7 +86,7 @@ def main(args=None):
             else:
                 scores, classification, transformed_anchors = retinanet(data['img'].float())
             print('Elapsed time: {}'.format(time.time()-st))
-            idxs = np.where(scores.cpu() > 0.3)
+            idxs = np.where(scores.cpu() > 0.5)
             img = np.array(255 * unnormalize(data['img'][0, :, :, :])).copy()
             img[img < 0] = 0
             img[img > 255] = 255
