@@ -6,6 +6,22 @@ import csv
 import cv2
 import argparse
 
+import numpy as np
+import torchvision
+import time
+import os
+import copy
+import pdb
+import time
+import argparse
+
+import sys
+import cv2
+
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torchvision import datasets, models, transforms
+from retinanet import model
 
 def load_classes(csv_reader):
     result = {}
@@ -26,10 +42,10 @@ def load_classes(csv_reader):
 
 
 # Draws a caption above the box in an image
-def draw_caption(image, box, caption):
+def draw_caption(image, box, caption,font_scale):
     b = np.array(box).astype(int)
-    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 0), 2)
-    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
+    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (0, 0, 0), 2)
+    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 255), 1)
 
 
 def detect_image(image_path, model_path, class_list):
@@ -41,16 +57,30 @@ def detect_image(image_path, model_path, class_list):
     for key, value in classes.items():
         labels[value] = key
 
-    model = torch.load(model_path)
+    if parser.depth == 18:
+        model1 = model.resnet18(num_classes=10)
+    elif parser.depth == 34:
+        model1 = model.resnet34(num_classes=10)
+    elif parser.depth == 50:
+        model1 = model.resnet50(num_classes=10)
+    elif parser.depth == 101:
+        model1 = model.resnet101(num_classes=10)
+    elif parser.depth == 152:
+        model1 = model.resnet152(num_classes=10)
 
-    if torch.cuda.is_available():
-        model = model.cuda()
+    use_gpu = torch.cuda.is_available()
 
-    model.training = False
-    model.eval()
-
+    if use_gpu:
+        model1.load_state_dict(torch.load(parser.model_path))
+        model1 = model1.cuda()
+    else:
+        model1.load_state_dict(torch.load(parser.model_path, map_location=torch.device('cpu')))
+    
+    model1.training = False
+    model1.eval()
+    idx=0
     for img_name in os.listdir(image_path):
-
+        idx=idx+1
         image = cv2.imread(os.path.join(image_path, img_name))
         if image is None:
             continue
@@ -91,32 +121,33 @@ def detect_image(image_path, model_path, class_list):
         with torch.no_grad():
 
             image = torch.from_numpy(image)
-            if torch.cuda.is_available():
-                image = image.cuda()
-
             st = time.time()
-            print(image.shape, image_orig.shape, scale)
-            scores, classification, transformed_anchors = model(image.cuda().float())
-            print('Elapsed time: {}'.format(time.time() - st))
+            if use_gpu:
+                image = image.cuda()
+                scores, classification, transformed_anchors = model1(image.cuda().float())
+            else:
+                 scores, classification, transformed_anchors = model1(image.float())
+            
+            
+            print('Elapsed time for {}: {:.2f}s'.format(f"output_image_{idx}.jpg", time.time() - st))
             idxs = np.where(scores.cpu() > 0.5)
-
+            
             for j in range(idxs[0].shape[0]):
                 bbox = transformed_anchors[idxs[0][j], :]
-
+              
                 x1 = int(bbox[0] / scale)
                 y1 = int(bbox[1] / scale)
                 x2 = int(bbox[2] / scale)
                 y2 = int(bbox[3] / scale)
                 label_name = labels[int(classification[idxs[0][j]])]
-                print(bbox, classification.shape)
                 score = scores[j]
                 caption = '{} {:.3f}'.format(label_name, score)
-                # draw_caption(img, (x1, y1, x2, y2), label_name)
-                draw_caption(image_orig, (x1, y1, x2, y2), caption)
+                draw_caption(image_orig, (x1, y1, x2, y2), caption,parser.font)
                 cv2.rectangle(image_orig, (x1, y1), (x2, y2), color=(0, 0, 255), thickness=2)
+                print(f"{label_name} (Score: {score:.2f})")
 
-            cv2.imshow('detections', image_orig)
-            cv2.waitKey(0)
+        output_path = os.path.join(parser.save_dir, f"output_image_{idx}.jpg")
+        cv2.imwrite(output_path, image_orig)
 
 
 if __name__ == '__main__':
@@ -126,6 +157,9 @@ if __name__ == '__main__':
     parser.add_argument('--image_dir', help='Path to directory containing images')
     parser.add_argument('--model_path', help='Path to model')
     parser.add_argument('--class_list', help='Path to CSV file listing class names (see README)')
+    parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
+    parser.add_argument('--save_dir', help='Path to directory for saving annotated images')
+    parser.add_argument('--font', help='add font scale (optinal)',type=float,default=1.0)
 
     parser = parser.parse_args()
 
