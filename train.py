@@ -24,7 +24,7 @@ def main(args=None):
     parser.add_argument('--csv_val', help='Path to file containing validation annotations (optional, see readme)')
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
     parser.add_argument('--epochs', help='Number of epochs', type=int, default=100)
-    parser.add_argument('--continue_from_path', help='Path to the epoch weights for continuing training')
+    parser.add_argument('--continue_from_path', help='Path to the epoch weights for continuing training or backbone model, must be .pt')
     parser.add_argument('--starting_number', help='Starting number for output naming', type=int, default=0)
 
     parser = parser.parse_args(args)
@@ -150,13 +150,13 @@ def main(args=None):
         scheduler.step(np.mean(epoch_loss))
 
         # Update the file name with the epoch number and starting number for output naming
-        save_path = f'/content/drive/MyDrive/epoch152/{parser.dataset}_retinanet{parser.depth}_{epoch_num + parser.starting_number}.pt'
+        save_path = f'/epoch152/{parser.dataset}_retinanet{parser.depth}_{epoch_num + parser.starting_number}.pt'
         # Save the model
         torch.save(retinanet.module.state_dict(), save_path)
 
     retinanet.eval()
 
-    torch.save(retinanet, '/content/drive/MyDrive/epoch152/model_final.pt')
+    torch.save(retinanet, 'epoch152/model_final.pt')
 
 
 if __name__ == '__main__':
