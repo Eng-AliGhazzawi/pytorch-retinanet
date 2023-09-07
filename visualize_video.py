@@ -110,8 +110,8 @@ def detect_image(image, model, classes, font_scale, save_dir, frame_counter):
             score = scores[j]
             if score > 0.5:
               caption = '{} {:.3f}'.format(label_name, score)
-              draw_caption(image_orig, (x1, y1, x2, y2), caption, font_scale)
               cv2.rectangle(image_orig, (x1, y1), (x2, y2), color=(0, 0, 255), thickness=2)
+              draw_caption(image_orig, (x1, y1-10, x2, y2-10), caption,parser.font)
               print(f"{label_name} (Score: {score:.2f})")
 
     # Save the modified image with bounding boxes and captions
