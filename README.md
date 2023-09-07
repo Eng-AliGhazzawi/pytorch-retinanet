@@ -5,7 +5,7 @@
 
 Pytorch  implementation of RetinaNet object detection as described in [Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002) by Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He and Piotr Dollár.
 
-This implementation is primarily designed to be easy to read and simple to modify.
+This implementation is primarily designed to be easy to read and simple to modify. Also, it is inspired by Yhenon version at this link (https://github.com/yhenon/pytorch-retinanet).
 
 ## Results
 Currently, this repo achieves 33.5% mAP at 600px resolution with a Resnet-50 backbone. The published result is 34.0% mAP. The difference is likely due to the use of Adam optimizer instead of SGD with weight decay.
@@ -51,12 +51,9 @@ Note that the --csv_val argument is optional, in which case no validation will b
 A pre-trained model is available at: 
 - https://drive.google.com/open?id=1yLmjq3JtXi841yXWBxst0coAgR26MNBS (this is a pytorch state dict)
 
-The state dict model can be loaded using:
+The state dict model can be loaded using: --pre_trained_model <path/to/pre_trained_model.pt>
 
-```
-retinanet = model.resnet50(num_classes=dataset_train.num_classes(),)
-retinanet.load_state_dict(torch.load(PATH_TO_WEIGHTS))
-```
+
 
 ## Validation
 
@@ -115,6 +112,10 @@ This will visualize bounding boxes on the validation set. To visualise with a CS
 python visualize.py --dataset csv --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv> --model <path/to/model.pt>
 ```
 
+```
+python visualize_single_image.py --dataset csv --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv> --model <path/to/model.pt>
+```
+
 ## Model
 
 The retinanet model uses a resnet backbone. You can set the depth of the resnet model using the --depth argument. Depth must be one of 18, 34, 50, 101 or 152. Note that deeper models are more accurate but are slower and use more memory.
@@ -129,22 +130,24 @@ Images with multiple bounding boxes should use one row per bounding box.
 Note that indexing for pixel values starts at 0.
 The expected format of each line is:
 ```
-path/to/image.jpg,x1,y1,x2,y2,class_name
+image_name.jpg,x1,y1,x2,y2,class_name
 ```
+
+Note: Every annotation file must be in the same folder as its' related images.
 
 Some images may not contain any labeled objects.
 To add these images to the dataset as negative examples,
 add an annotation where `x1`, `y1`, `x2`, `y2` and `class_name` are all empty:
 ```
-path/to/image.jpg,,,,,
+image_name.jpg,,,,,
 ```
 
 A full example:
 ```
-/data/imgs/img_001.jpg,837,346,981,456,cow
-/data/imgs/img_002.jpg,215,312,279,391,cat
-/data/imgs/img_002.jpg,22,5,89,84,bird
-/data/imgs/img_003.jpg,,,,,
+img_001.jpg,837,346,981,456,cow
+img_002.jpg,215,312,279,391,cat
+img_002.jpg,22,5,89,84,bird
+img_003.jpg,,,,,
 ```
 
 This defines a dataset with 3 images.
@@ -172,8 +175,7 @@ bird,2
 
 ## Acknowledgements
 
-- Significant amounts of code are borrowed from the [keras retinanet implementation](https://github.com/fizyr/keras-retinanet)
-- The NMS module used is from the [pytorch faster-rcnn implementation](https://github.com/ruotianluo/pytorch-faster-rcnn)
+- Significant amounts of code are borrowed from the [yhenon_implmentation](https://github.com/yhenon/pytorch-retinanet)
 
 ## Examples
 
