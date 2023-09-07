@@ -122,12 +122,17 @@ python visualize_video.py --video_path <path/to/video.mp4> --model_path <path/to
 ```
 
 --rate:
+
 Defines the frequency at which the code processes frames from the video.
+
 For instance, setting it to 1 means the code will process 1 frame every second.
 
 --frames:
+
 Specifies the number of consecutive frames for which a processed frame should be displayed.
+
 Example: If set to 10, every processed frame will be displayed for a duration of 10 frames. This means, if the first 10 frames displayed are derived from the processed first frame, the following frame would be the 11th frame in its original (non-processed) form.
+
 Important Note: If the product of rate and frames exceeds the video's actual frame rate, this will result in an error.
 
 
