@@ -87,11 +87,11 @@ def main(args=None):
     else:
         raise ValueError('Unsupported model depth, must be one of 18, 34, 50, 101, 152')
 
-    if parser.continue_from_path is not None:
+    if parser.pre_trained_model is not None:
         if torch.cuda.is_available():
-            retinanet.load_state_dict(torch.load(parser.continue_from_path))
+            retinanet.load_state_dict(torch.load(parser.pre_trained_model))
         else:
-            retinanet.load_state_dict(torch.load(parser.continue_from_path, map_location=torch.device('cpu')))
+            retinanet.load_state_dict(torch.load(parser.pre_trained_model, map_location=torch.device('cpu')))
 
 
     if torch.cuda.is_available():
