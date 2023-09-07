@@ -26,7 +26,7 @@ def main(args=None):
     parser.add_argument('--csv_classes', help='Path to file containing class list (see readme)')
     parser.add_argument('--csv_val', help='Path to file containing validation annotations (optional, see readme)')
     parser.add_argument('--model', help='Path to model (.pt) file.')
-    parser.add_argument('--save_dir', help='Directory to save the processed images. (Optional)')
+    parser.add_argument('--save_dir', help='Directory to save the processed images. (Optional)', default="visualization")
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
 
     parser = parser.parse_args(args)
@@ -108,7 +108,7 @@ def main(args=None):
             # Save the processed image with bounding boxes, labels, and scores
             if not os.path.exists(parser.save_dir):
                 os.makedirs(parser.save_dir)
-            save_dir = parser.save_dir if parser.save_dir else ""
+            save_dir = parser.save_dir
             save_path = os.path.join(save_dir, f"output_image_{idx}.jpg")
             cv2.imwrite(save_path, img)
             print(f"Image saved at {save_path}")
