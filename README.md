@@ -12,21 +12,18 @@ Currently, this repo achieves 33.5% mAP at 600px resolution with a Resnet-50 bac
 
 ## Installation
 
-1) Clone this repo
+1) Make a new environment and clone this repository
 
-2) Install the required packages:
+2) Install the required packages (Linux only):
 
 ```
 apt-get install tk-dev python-tk
 ```
 
-3) Install the python packages:
+3) Open the repository folder in the environment terminal and preform install the python packages:
 	
 ```
-pip install pandas
-pip install pycocotools
-pip install opencv-python
-pip install requests
+pip install -r requirements.txt
 
 ```
 
@@ -175,6 +172,8 @@ This defines a dataset with 3 images.
 `img_002.jpg` contains a cat and a bird.
 `img_003.jpg` contains no interesting objects/animals.
 
+**Beware**: Some software adds empty lines in place of a labelless image; in such a case, you must follow the instructions in the above example. or it will produce a file not found error.
+
 
 ### Class mapping format
 The class name to ID mapping file should contain one mapping per line.
@@ -195,7 +194,7 @@ bird,2
 
 ## Acknowledgements
 
-- This repository is essentially an adaptation of [yhenon_implmentation](https://github.com/yhenon/pytorch-retinanet). It incorporates several enhancements and additional features, including the capability to visualize images and videos, thus making the tool more user-friendly.
+- This repository is essentially an adaptation of [yhenon_implmentation](https://github.com/yhenon/pytorch-retinanet). However, it incorporates several enhancements and additional features, including the capability to visualize images and videos, thus making the tool more user-friendly.
 
 ## Examples
 
