@@ -159,7 +159,7 @@ def process_video(video_path, model_path, class_list, save_dir, rate, font_scale
     out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), frame_rate, (int(cap.get(3)), int(cap.get(4))))
 
     frame_counter = 0
-    frame_interval = int(frame_rate * rate)  # Calculate the fixed frame interval
+    frame_interval = int(frame_rate / rate)  # Calculate the fixed frame interval
 
     while True:
         ret, frame = cap.read()
@@ -188,13 +188,13 @@ def process_video(video_path, model_path, class_list, save_dir, rate, font_scale
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Simple script for processing a video with object detection.')
 
-    parser.add_argument('--video_path', help='Path to the input video')
+    parser.add_argument('--video_path', help='Path to the input video, must be mp4')
     parser.add_argument('--model_path', help='Path to the trained model')
     parser.add_argument('--class_list', help='Path to CSV file listing class names')
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
     parser.add_argument('--save_dir', help='Path to directory for saving annotated images and processed video')
     parser.add_argument('--rate', help='Frame rate for processing (frames per second)', type=float, default=1.0)
-    parser.add_argument('--font_scale', help='Font scale for captions', type=float, default=1.5)
+    parser.add_argument('--font', help='Font scale for captions', type=float, default=1.5)
     parser.add_argument('--frames', help='Number of frames to display the detected image', type=int, default=10)
     parser.add_argument('--output_video', help='Name of the output video file', default='output_video.mp4')
 
@@ -204,4 +204,4 @@ if __name__ == '__main__':
         os.makedirs(parser.save_dir)
 
     process_video(parser.video_path, parser.model_path, parser.class_list, parser.save_dir, parser.rate,
-                  parser.font_scale, parser.frames)
+                  parser.font, parser.frames)
