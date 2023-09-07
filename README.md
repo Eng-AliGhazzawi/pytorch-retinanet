@@ -113,8 +113,22 @@ python visualize.py --dataset csv --csv_classes <path/to/train/class_list.csv>  
 ```
 
 ```
-python visualize_single_image.py --dataset csv --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv> --model <path/to/model.pt>
+python visualize_images.py --image_dir <path/to/images> --class_list <path/to/class_list.csv> --model_path <path/to/model.pt> --depth <specify_model_depth> --save_dir <path/to/save/directory> --font <optional>
 ```
+
+
+```
+python visualize_video.py --video_path <path/to/video.mp4> --model_path <path/to/model.pt> --class_list <path/to/classes.csv> --save_dir <path/to/output/directory/> --rate <rate_of_proccessing> --depth <model_depth> --frames <number_of_frames_to display_processed_frames>
+```
+
+--rate:
+Defines the frequency at which the code processes frames from the video.
+For instance, setting it to 1 means the code will process 1 frame every second.
+--frames:
+Specifies the number of consecutive frames for which a processed frame should be displayed.
+Example: If set to 10, every processed frame will be displayed for a duration of 10 frames. This means, if the first 10 frames displayed are derived from the processed first frame, the following frame would be the 11th frame in its original (non-processed) form.
+Important Note: If the product of rate and frames exceeds the video's actual frame rate, this will result in an error.
+
 
 ## Model
 
@@ -175,7 +189,7 @@ bird,2
 
 ## Acknowledgements
 
-- Significant amounts of code are borrowed from the [yhenon_implmentation](https://github.com/yhenon/pytorch-retinanet)
+- This repository is essentially an adaptation of [yhenon_implmentation](https://github.com/yhenon/pytorch-retinanet). It incorporates several enhancements and additional features, including the capability to visualize images and videos, thus making the tool more user-friendly.
 
 ## Examples
 
