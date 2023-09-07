@@ -30,7 +30,7 @@ def main(args=None):
 
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
     parser.add_argument('--epochs', help='Number of epochs', type=int, default=100)
-    parser.add_argument('--continue_from_path', help='Path to pretrained model, must hold state_dict, must be .pt')
+    parser.add_argument('--pre_trained_model', help='Path to pretrained model, must hold state_dict, must be .pt')
 
     parser = parser.parse_args(args)
 
