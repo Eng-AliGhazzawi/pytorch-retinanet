@@ -109,13 +109,16 @@ This will visualize bounding boxes on the validation set. To visualise with a CS
 python visualize.py --dataset csv --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv> --model <path/to/model.pt>
 ```
 
+To visualize any set of images, use:
+
 ```
 python visualize_images.py --image_dir <path/to/images> --class_list <path/to/class_list.csv> --model_path <path/to/model.pt> --depth <specify_model_depth> --save_dir <path/to/save/directory> --font <optional>
 ```
 
+To visualize a video, use:
 
 ```
-python visualize_video.py --video_path <path/to/video.mp4> --model_path <path/to/model.pt> --class_list <path/to/classes.csv> --save_dir <path/to/output/directory/> --rate <rate_of_proccessing> --depth <model_depth> --frames <number_of_frames_to display_processed_frames>
+python visualize_video.py --video_path <path/to/video.mp4> --model_path <path/to/model.pt> --class_list <path/to/classes.csv> --save_dir <path/to/output/directory/> --rate <rate_of_proccessing> --depth <model_depth> --frames <number_of_frames_to_display_processed_frames>
 ```
 
 --rate:
