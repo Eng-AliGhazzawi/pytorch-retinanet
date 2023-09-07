@@ -160,7 +160,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', help='Path to model')
     parser.add_argument('--class_list', help='Path to CSV file listing class names (see README)')
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
-    parser.add_argument('--save_dir', help='Path to directory for saving annotated images', default="visualization")
+    parser.add_argument('--save_dir', help='Path to directory for saving annotated images', default="visualization_images")
     parser.add_argument('--font', help='add font scale (optinal)',type=float,default=1.0)
 
     parser = parser.parse_args()
