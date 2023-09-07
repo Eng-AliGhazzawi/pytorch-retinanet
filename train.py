@@ -30,6 +30,7 @@ def main(args=None):
 
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
     parser.add_argument('--epochs', help='Number of epochs', type=int, default=100)
+    parser.add_argument('--continue_from_path', help='Path to pretrained model, must hold state_dict, must be .pt')
 
     parser = parser.parse_args(args)
 
@@ -86,6 +87,11 @@ def main(args=None):
     else:
         raise ValueError('Unsupported model depth, must be one of 18, 34, 50, 101, 152')
 
+    if parser.continue_from_path is not None:
+        if torch.cuda.is_available():
+            retinanet.load_state_dict(torch.load(parser.continue_from_path))
+        else:
+            retinanet.load_state_dict(torch.load(parser.continue_from_path, map_location=torch.device('cpu')))
 
 
     if torch.cuda.is_available():
@@ -170,11 +176,11 @@ def main(args=None):
         if not os.path.exists("epoch"):
             os.makedirs("epoch")
 
-        torch.save(retinanet.module, 'epoch/{}_retinanet{}_{}.pt'.format(parser.dataset,parser.depth ,epoch_num))
+        torch.save(retinanet.module.state_dict(), 'epoch/{}_retinanet{}_{}.pt'.format(parser.dataset,parser.depth ,epoch_num))
 
     retinanet.eval()
 
-    torch.save(retinanet, 'model_final.pt')
+    torch.save(retinanet.module.state_dict(), 'model_final.pt')
 
 
 if __name__ == '__main__':
