@@ -1,6 +1,6 @@
 import argparse
 import collections
-import tqdm
+from tqdm import tqdm
 import numpy as np
 import os
 import torch
