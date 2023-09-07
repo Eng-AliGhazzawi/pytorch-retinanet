@@ -20,7 +20,7 @@ Currently, this repo achieves 33.5% mAP at 600px resolution with a Resnet-50 bac
 apt-get install tk-dev python-tk
 ```
 
-3) Open the repository folder in the environment terminal and preform install the python packages:
+3) Open the repository folder in the environment terminal and perform this  installation command:
 	
 ```
 pip install -r requirements.txt
