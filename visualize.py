@@ -101,8 +101,8 @@ def main(args=None):
                 y2 = int(bbox[3])
                 label_name = dataset_val.labels[int(classification[idxs[0][j]])]
                 score = scores[idxs[0][j]].item()
-                draw_caption_with_score(img, (x1, y1, x2, y2), label_name, score)
                 cv2.rectangle(img, (x1, y1), (x2, y2), color=(0, 0, 255), thickness=2)
+                draw_caption_with_score(img, (x1, y1-10, x2, y2-10), label_name, score)
                 print(f"{label_name} (Score: {score:.2f})")
 
             # Save the processed image with bounding boxes, labels, and scores
