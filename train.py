@@ -115,17 +115,21 @@ def main(args=None):
 
     print('Num training images: {}'.format(len(dataset_train)))
 
+        
     for epoch_num in range(parser.epochs):
-
+    
         retinanet.train()
         retinanet.module.freeze_bn()
-
+    
         epoch_loss = []
-
-        for iter_num, data in enumerate(dataloader_train):
+    
+        # wrap the dataloader with tqdm
+        progress_bar = tqdm(enumerate(dataloader_train), total=len(dataloader_train))
+        
+        for iter_num, data in progress_bar:
             try:
                 optimizer.zero_grad()
-
+    
                 if torch.cuda.is_available():
                     classification_loss, regression_loss = retinanet([data['img'].cuda().float(), data['annot']])
                 else:
@@ -133,26 +137,26 @@ def main(args=None):
                     
                 classification_loss = classification_loss.mean()
                 regression_loss = regression_loss.mean()
-
+    
                 loss = classification_loss + regression_loss
-
+    
                 if bool(loss == 0):
                     continue
-
+    
                 loss.backward()
-
+    
                 torch.nn.utils.clip_grad_norm_(retinanet.parameters(), 0.1)
-
+    
                 optimizer.step()
-
+    
                 loss_hist.append(float(loss))
-
                 epoch_loss.append(float(loss))
-
-                print(
-                    'Epoch: {} | Iteration: {} | Classification loss: {:1.5f} | Regression loss: {:1.5f} | Running loss: {:1.5f}'.format(
-                        epoch_num, iter_num, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
-
+    
+                # updating the progress bar description to include losses
+                progress_bar.set_description(
+                    f"E:{epoch_num} | Iter:{iter_num} | CLoss: {classification_loss:.5f} | RLoss: {regression_loss:.5f} | RunLoss: {np.mean(loss_hist):.5f}"
+                )
+    
                 del classification_loss
                 del regression_loss
             except Exception as e:
