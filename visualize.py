@@ -106,6 +106,8 @@ def main(args=None):
                 print(f"{label_name} (Score: {score:.2f})")
 
             # Save the processed image with bounding boxes, labels, and scores
+            if not os.path.exists(parser.save_dir):
+                os.makedirs(parser.save_dir)
             save_dir = parser.save_dir if parser.save_dir else ""
             save_path = os.path.join(save_dir, f"output_image_{idx}.jpg")
             cv2.imwrite(save_path, img)
