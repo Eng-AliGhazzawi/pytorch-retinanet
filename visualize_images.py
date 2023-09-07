@@ -44,8 +44,8 @@ def load_classes(csv_reader):
 # Draws a caption above the box in an image
 def draw_caption(image, box, caption,font_scale):
     b = np.array(box).astype(int)
-    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (0, 0, 0), 2)
-    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 255), 1)
+    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (0, 0, 0), 3)
+    cv2.putText(image, caption, (b[0], b[1] - 10), cv2.FONT_HERSHEY_PLAIN, font_scale, (255, 255, 255), 3)
 
 
 def detect_image(image_path, model_path, class_list):
@@ -142,8 +142,8 @@ def detect_image(image_path, model_path, class_list):
                 label_name = labels[int(classification[idxs[0][j]])]
                 score = scores[j]
                 caption = '{} {:.3f}'.format(label_name, score)
-                draw_caption(image_orig, (x1, y1, x2, y2), caption,parser.font)
                 cv2.rectangle(image_orig, (x1, y1), (x2, y2), color=(0, 0, 255), thickness=2)
+                draw_caption(image_orig, (x1, y1-10, x2, y2-10), caption,parser.font)
                 print(f"{label_name} (Score: {score:.2f})")
 
         output_path = os.path.join(parser.save_dir, f"output_image_{idx}.jpg")
