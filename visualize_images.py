@@ -145,6 +145,8 @@ def detect_image(image_path, model_path, class_list):
                 cv2.rectangle(image_orig, (x1, y1), (x2, y2), color=(0, 0, 255), thickness=2)
                 draw_caption(image_orig, (x1, y1-10, x2, y2-10), caption,parser.font)
                 print(f"{label_name} (Score: {score:.2f})")
+        if not os.path.exists(parser.save_dir):
+                os.makedirs(parser.save_dir)
 
         output_path = os.path.join(parser.save_dir, f"output_image_{idx}.jpg")
         cv2.imwrite(output_path, image_orig)
@@ -158,7 +160,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', help='Path to model')
     parser.add_argument('--class_list', help='Path to CSV file listing class names (see README)')
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
-    parser.add_argument('--save_dir', help='Path to directory for saving annotated images')
+    parser.add_argument('--save_dir', help='Path to directory for saving annotated images', default="visualization")
     parser.add_argument('--font', help='add font scale (optinal)',type=float,default=1.0)
 
     parser = parser.parse_args()
