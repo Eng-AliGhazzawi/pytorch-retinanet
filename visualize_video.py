@@ -192,7 +192,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', help='Path to the trained model')
     parser.add_argument('--class_list', help='Path to CSV file listing class names')
     parser.add_argument('--depth', help='Resnet depth, must be one of 18, 34, 50, 101, 152', type=int, default=50)
-    parser.add_argument('--save_dir', help='Path to directory for saving annotated images and processed video')
+    parser.add_argument('--save_dir', help='Path to directory for saving annotated images and processed video', default="visualization_video")
     parser.add_argument('--rate', help='Frame rate for processing (frames per second)', type=float, default=1.0)
     parser.add_argument('--font', help='Font scale for captions', type=float, default=1.5)
     parser.add_argument('--frames', help='Number of frames to display the detected image', type=int, default=10)
