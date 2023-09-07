@@ -149,14 +149,16 @@ def main(args=None):
 
         scheduler.step(np.mean(epoch_loss))
 
+        if not os.path.exists("epoch"):
+            os.makedirs("epoch")
         # Update the file name with the epoch number and starting number for output naming
-        save_path = f'/epoch152/{parser.dataset}_retinanet{parser.depth}_{epoch_num + parser.starting_number}.pt'
+        save_path = f'/epoch/{parser.dataset}_retinanet{parser.depth}_{epoch_num + parser.starting_number}.pt'
         # Save the model
         torch.save(retinanet.module.state_dict(), save_path)
 
     retinanet.eval()
 
-    torch.save(retinanet, 'epoch152/model_final.pt')
+    torch.save(retinanet, 'epoch/model_final.pt')
 
 
 if __name__ == '__main__':
